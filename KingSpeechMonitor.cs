@@ -10,11 +10,6 @@ namespace monitorsProj
         //w tej kolejce czekają rycerze:
         private ConditionVariable kingNotSpeaking = new ConditionVariable();
 
-        public KingSpeechMonitor ()
-        {
-
-        }
-
         //ENTRIES
 
         //po zakończeniu mówienia król zwalnia rycerzy z rozkazu zamknięcia się
@@ -23,7 +18,7 @@ namespace monitorsProj
             lock (kingSpeakingLock)
             {
                 isKingSpeaking = false;
-                kingNotSpeaking.Pulse();
+                kingNotSpeaking.PulseAll();
                 return;
             }
         }
@@ -37,19 +32,21 @@ namespace monitorsProj
             }
         }
 
-        //jeżeli król mówi, poczekaj na koniec (potem zwalnianie sekwencyjne)
+        //jeżeli król mówi, poczekaj na koniec
         public void WaitIfKingIsSpeaking (string name = "")
         {
             lock (kingSpeakingLock)
             {
-                if (isKingSpeaking)
+                if (!isKingSpeaking)
+                {
+                    Utils.logEvent($"{name} może mówić, bo król nie mówi.");
+                }
+                else
                 {
                     Utils.logEvent($"{name} czeka aż król skończy mówić.");
                     while (isKingSpeaking) //spurious wakeup
                         kingNotSpeaking.Wait(kingSpeakingLock);
                     Utils.logEvent($"{name} może teraz mówić.");
-                    //zwalnianie kolejnego rycerza (by nie używać PulseAll)
-                    kingNotSpeaking.Pulse();
                 }
             }
         }

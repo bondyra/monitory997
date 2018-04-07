@@ -5,10 +5,6 @@ namespace monitorsProj
 {
     public class Knight
     {
-        private const int repeats = 3;
-        private readonly Tuple<double, double> knightSleepRange = new Tuple<double, double>(5d, 10d);
-        private readonly Tuple<double, double> knightSpeakRange = new Tuple<double, double>(1d, 5d);
-        
         private bool isKing;
         private int id;
         private string name;
@@ -31,10 +27,10 @@ namespace monitorsProj
         public void run()
         {
             Utils.logEvent($"Startuje {name}.");
-            for (int j=0;j<repeats;j++){
+            for (int j=0;j<Utils.KnightRepeats;j++){
                 for (var i = 0; i < knightFunctions.Length; i++)
                 {
-                    Utils.logEvent($"{name} rozpoczyna: {resolveActionName(i)} ({j+1})");
+                    Utils.logEvent($"{name} rozpoczyna: {resolveActionName(i)} ({j+1}/{Utils.KnightRepeats})");
                     knightFunctions[i].Invoke();
                 }
             }
@@ -53,7 +49,7 @@ namespace monitorsProj
 
         private void knightSleeps()
         {
-            var sleepTime = Utils.getRandomMiliseconds(knightSleepRange.Item1, knightSleepRange.Item2);
+            var sleepTime = Utils.getRandomMiliseconds(Utils.KnightSleepRange.Item1, Utils.KnightSleepRange.Item2);
             Utils.logEvent($"{name} idzie spać na {Utils.printTime(sleepTime)}s");
             Thread.Sleep(sleepTime);
         }
@@ -65,7 +61,7 @@ namespace monitorsProj
 
         public void knightStory()
         {
-            var sleepTime = Utils.getRandomMiliseconds(knightSpeakRange.Item1, knightSpeakRange.Item2);
+            var sleepTime = Utils.getRandomMiliseconds(Utils.KnightSpeakRange.Item1, Utils.KnightSpeakRange.Item2);
             Utils.logEvent($"{name} opowiada przez {Utils.printTime(sleepTime)}s:  {Utils.getRandomStory()}");
             Thread.Sleep(sleepTime);
         }
