@@ -1,9 +1,9 @@
 using System;
 
-namespace monitory997
+namespace monitorsProj
 {
-    //symulacja monitora do komunikacji miedzy sasiadami
-    //przepisane 1:1 ze slajdu 21 wykladu 4 (trochę słabo rozumiem tę flagę wait)
+    //symulacja monitora do komunikacji między sąsiadami
+    //dokładnie jak na wykładzie (ucztujący filozofowie)
     public class ChannelMonitor
     {
         //obiekt na którym zakładany jest lock
@@ -57,8 +57,10 @@ namespace monitory997
                 channelTaken[(id+1)%N] = false;
                 if (knightChannelWait[(N+id-1)%N] && !channelTaken[(N+id-1)%N])
                     wait = true;
-                if (knightChannelWait[(id+1)%N] && !channelTaken[(id+2)%N])
+                if (knightChannelWait[(id+1)%N] && !channelTaken[(id+2)%N]){
                     channelQueue[(id+1)%N].Pulse();
+                    return;
+                }
                 if (wait)
                 {
                     wait = false;

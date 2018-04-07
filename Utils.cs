@@ -1,6 +1,6 @@
 using System;
 
-namespace monitory997
+namespace monitorsProj
 {
 
     public static class Utils
@@ -27,16 +27,18 @@ namespace monitory997
         }
         
         private static string[] stories = new string[] {
-            "Raz sie tak najebalem ze sprzedalem ziomka na komendzie w niedziele z zakazem handlu.",
-            "Raz sie tak najebalem ze wstalem rano na Bródnie.","Jony to debil.","Ja to pierdolę, zdejmuję kominiarę.",
-            "Moja matka nie ma oczu.","Kiedyś to było.","Grunwald i Jeżyce to dwie najbardziej pojebane dzielnice.",
-            "Mój poduszkowiec jest pełen węgorzy.","Liroy Liroy ten jebany madafaka...","Pozdro 600.",
-            "Mam jedną pierdoloną schizofrenię.","Gdy wydarzy się incydent to pojawia się konfident...",
-            "Lecimy tutaj.", "Tande rucha pande.", "Jak tak patrzę na was to chce mi się srać."
+            "Litwo! Ojczyzno moja! Ty jesteś jak zdrowie!",
+            "Apator Toruń pije wodę z Wisły.", "Nadczłowiek jest treścią ziemi.", "Lorem ipsum dolor sit amet.",
+            "Podaję hasło: Okoń.", "Kiedyś to było.", "Mój poduszkowiec jest pełen węgorzy.",
+            "Randomowa historia #1.", "Randomowa historia #2.", "Randomowa historia #3."
         };
         public static string getRandomStory (){
             int ind = r.Next(stories.Length);
             return stories[ind];
+        }
+
+        public static bool getRandomBool (){
+            return r.Next(0,1) == 0 ? false : true;
         }
     }
 }

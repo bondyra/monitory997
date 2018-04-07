@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace monitory997
+namespace monitorsProj
 {
     public class Monitory
     {
@@ -9,6 +9,8 @@ namespace monitory997
 
         private const int N = 2 * K;
         private const int K = 2;
+        private const int W = 2;
+        private const int C = 2;
 
         private readonly Tuple<double, double> servantSleepRange = new Tuple<double, double>(5d, 10d);
         private readonly Knight[] knights = new Knight[N];
@@ -17,10 +19,13 @@ namespace monitory997
         private ChannelMonitor channelMonitor;
         private KingSpeechMonitor kingSpeechMonitor;
 
+        private ResourcesMonitor resourcesMonitor;
+
         public Monitory()
         {
             this.channelMonitor = new ChannelMonitor(N);
             this.kingSpeechMonitor = new KingSpeechMonitor();
+            this.resourcesMonitor = new ResourcesMonitor(W, C, N);
         }
 
         public void doKnightSpeak(int id)
@@ -39,7 +44,7 @@ namespace monitory997
             if (id!=0) 
                 kingSpeechMonitor.WaitIfKingIsSpeaking(name);
             else
-                kingSpeechMonitor.ShutTheFuckUp(); //król blokuje możliwość mówienia
+                kingSpeechMonitor.ShutUp(); //król blokuje możliwość mówienia
 
             knights[id].knightStory();
             //"put-down-forks"
@@ -53,9 +58,31 @@ namespace monitory997
             }
         }
 
+        public void doKnightEat (int id){
+            resourcesMonitor.knightEntryWork(id);
+        }
+
+        private void wineServantWork (){
+            while (true){
+                var sleepTime = Utils.getRandomMiliseconds(servantSleepRange.Item1, servantSleepRange.Item2);
+                Utils.logEvent($"Do przyjścia służącego WINO minie {Utils.printTime(sleepTime)}s.");
+                Thread.Sleep(sleepTime);
+                resourcesMonitor.wineServantWork();
+            }
+        }
+
+        private void cucumberServantWork(){
+            while (true){
+                var sleepTime = Utils.getRandomMiliseconds(servantSleepRange.Item1, servantSleepRange.Item2);
+                Utils.logEvent($"Do przyjścia służącego OGÓRKI minie {Utils.printTime(sleepTime)}s.");
+                Thread.Sleep(sleepTime);
+                resourcesMonitor.cucumberServantWork();
+            }
+        }
+
         public void run()
         {
-            Utils.logEvent("Hello Monitory997!");
+            Utils.logEvent("Zaczynamy.");
             //rycerze
             for (int i = 0; i < N; i++)
             {
@@ -68,19 +95,18 @@ namespace monitory997
                 }).Start();
             }
 
-            //słuzacy
-            while (true)
-            {
-                Utils.logEvent("Przychodzi nowy służący.");
-                new Thread(() =>
-                {
-                    Thread.CurrentThread.IsBackground = true;
-                    //wywolac funkcje
-                }).Start();
-                var sleepTime = Utils.getRandomMiliseconds(servantSleepRange.Item1, servantSleepRange.Item2);
-                Utils.logEvent($"Do przyjścia kolejnego slużącego minie {Utils.printTime(sleepTime)}s.");
-                Thread.Sleep(sleepTime);
-            }
+            //służący
+            new Thread( () => {
+                Thread.CurrentThread.IsBackground = true;
+                wineServantWork();
+            }).Start();
+            new Thread( () => {
+                Thread.CurrentThread.IsBackground = true;
+                cucumberServantWork();
+            }).Start();
+
+            //by nie zabić programu
+            while (true){}
         }
     }
 

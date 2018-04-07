@@ -17,7 +17,7 @@
 using System;
 using System.Threading;
 
-namespace monitory997
+namespace monitorsProj
 {
     /// <summary>
     /// Condition variables are synchronization primitives that enable threads to 
