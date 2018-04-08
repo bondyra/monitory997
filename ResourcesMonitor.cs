@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 namespace monitorsProj
 {
@@ -54,16 +55,16 @@ namespace monitorsProj
         }
 
         //rycerz z talerzem i kielichem bierze swoje zasoby
-        //zwracane jest powodzenie operacji
-        public bool TryEat(int id){
+        //zwracany jest tuple z informacją co było/czego nie było (jeżeli było wszystko, to rycerz zjadł)
+        public Tuple<bool,bool> TryEat(int id){
             var name = Utils.getName(id);
-            bool hasDined = false;
+            bool isWine = false;
+            bool isCucumber = false;
             lock (monitorObject){
                 int plateId = (id/2 + id%2) % (peopleNumber/2);
-                bool isWine = wineBottle > 0;
-                bool isCucumber = cucumbers[plateId] > 0;
+                isWine = wineBottle > 0;
+                isCucumber = cucumbers[plateId] > 0;
                 if (isCucumber && isWine){
-                    hasDined = true;
                     Utils.logEvent($"{name} ZJADŁ!");
                     cucumbers[plateId]--;
                     wineBottle--;
@@ -72,7 +73,8 @@ namespace monitorsProj
                     Utils.logEvent($"{name} NIE ZJADŁ, nie było: {getFancyLackString(isWine, isCucumber)}.");
                 }
             }
-                return hasDined;
+
+            return new Tuple<bool, bool>(isCucumber, isWine);
         }
 
         private string getFancyLackString (bool isWine, bool isCucumber){
@@ -85,7 +87,7 @@ namespace monitorsProj
         }
 
         private void logResources(){
-            Utils.logEvent("ZASOBY:");
+            Utils.logEvent("ZASOBY PO OPERACJI:");
             Utils.logEvent($"STAN KARAFKI: {wineBottle}.");
             Utils.logEvent($"OGÓRKI: [{string.Join(",",cucumbers)}]");
         }

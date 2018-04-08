@@ -17,7 +17,7 @@ namespace monitorsProj
         public static readonly int K = 3;
         public static readonly int N = 2 * K;
         //max pojemnosc karafki wina
-        public static readonly int W = 2;
+        public static readonly int W = 4;
         //max pojemnosc talerzy ogorkow
         public static readonly int C = 2;
         
@@ -53,6 +53,9 @@ namespace monitorsProj
 
         public static bool getRandomBool (){
             return r.Next(0,1) == 0 ? false : true;
-        }        
+        }
+        
+        public static int WineQueue = 0;
+        public static int CucumberQueue = 1;
     }
 }
